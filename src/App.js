@@ -1,25 +1,48 @@
-import logo from './logo.svg';
 import './App.css';
+import { Auth } from './components/Auth';
+import Cookies from 'universal-cookie';
+import { useState } from 'react';
+import ChatRoom from './components/ChatRoom';
+import Button from './components/Button';
+import { signOut } from 'firebase/auth';
+import { auth } from './firebase-config';
+import { chatRoom } from './atoms/roomState';
+import { useRecoilState } from 'recoil';
+import { Container } from './styles/Container';
+import ResetCookies from './components/ResetCookies';
+
+const cookies = new Cookies();
 
 function App() {
+  const [isAuth, setIsAuth] = useState(cookies.get('auth-token'));
+  const [room, setRoom] = useRecoilState(chatRoom)
+
+  const handleSignOut = async () => {
+      await signOut(auth)
+      cookies.remove('auth-token');
+      setIsAuth(false);
+      setRoom(null)
+  }
+
+  if(!isAuth){
+    return (
+      <Container>
+        <ResetCookies />
+        <Auth setIsAuth={setIsAuth} />
+      </Container>
+    );
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Container>
+      <ResetCookies />
+      <div>
+        <ChatRoom />
+      </div>
+      <button className={'signOut'} onClick={handleSignOut}>signOut</button>
+    </Container>
+  )
+  
 }
 
 export default App;
