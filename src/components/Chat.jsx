@@ -24,6 +24,7 @@ const Chat = ({room}) => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if(message === '') return
+        setMessage('')
 
         await addDoc(messageRef, {
             message,
@@ -32,8 +33,6 @@ const Chat = ({room}) => {
             userImg: auth.currentUser.photoURL,
             room,
         })
-
-        setMessage('')
     }
 
     const queryMessages = query(messageRef, where('room', '==', room), orderBy('createdAt'), limit(25))
@@ -76,7 +75,7 @@ const Chat = ({room}) => {
                             ) : (
                                 <>
                                     <span className='user'>{messageRecord.user}</span>
-                                    <img src={messageRecord?.userImg} alt="dp" style={{width:'10%', borderRadius: '100%'}}/>
+                                    <img src={messageRecord?.userImg} alt="dp" style={{maxWidth:'10%', borderRadius: '100%'}}/>
                                 </>
                             )
                            } 
@@ -89,8 +88,8 @@ const Chat = ({room}) => {
         </div>
 
         <form onSubmit={handleSubmit} action="">
-            <textarea rows="2" cols="30" type="textarea" placeholder='Type your message here...' onChange={handleChange} value={message}/>
-            <Button name={'Send'} clickAction={handleSubmit} />
+            <textarea rows="2" cols="30" placeholder='Type your message here...' onChange={handleChange} value={message} autoFocus/>
+            <Button name={'Send'} clickAction={handleSubmit} type={'submit'}/>
         </form>
     </ChatStyle>
   )

@@ -47,13 +47,14 @@ export const ChatStyle = styled.div`
         }
 
         .message-text{
+            max-width: 80%;
+            height: auto;
             font-size: 13px;
             color: black;
             font-weight: normal;
             padding: 10px;
             background-color: #f5f5f5;
             border-radius: 8px;
-            max-width: 80%;
             margin-top: 5px;
         }
 
